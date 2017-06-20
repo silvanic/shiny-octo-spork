@@ -11,7 +11,8 @@ public class Rectangle extends Figure implements Surfacable {
 		if(o instanceof Rectangle){
 			Rectangle r = (Rectangle) o;
 			return (this.getPointBasDroite().equals(r.getPointBasDroite()))
-					&&(this.getPointHautGauche().equals(r.getPointHautGauche()));
+					&&(this.getPointHautGauche().equals(r.getPointHautGauche()))
+					&&(this.getCouleur().equals(r.getCouleur()));
 		} else {
 			return false;
 		}
@@ -22,6 +23,15 @@ public class Rectangle extends Figure implements Surfacable {
 		pBG = new Point(pHG.getX(),pHG.getY()-haut);
 		pHD = new Point(pHG.getX()+larg,pHG.getY());
 		pBD = new Point(pHD.getX(),pBG.getY());
+		couleur = Couleur.getCouleurDefaut();
+	}
+	
+	public Rectangle(Point point, int haut, int larg, Couleur c){
+		pHG = point;
+		pBG = new Point(pHG.getX(),pHG.getY()-haut);
+		pHD = new Point(pHG.getX()+larg,pHG.getY());
+		pBD = new Point(pHD.getX(),pBG.getY());
+		couleur = c;
 	}
 
 	public Point getPointHautGauche(){		
@@ -46,7 +56,7 @@ public class Rectangle extends Figure implements Surfacable {
 			+"HD "+getPointHautDroite()
 			+"\nBG "+getPointBasGauche()
 			+"BD "+getPointBasDroite()
-			+"\nSurface : "+surface()+"]\n";
+			+"\nSurface : "+surface()+ "\nCouleur : "+getCouleur()+" ]\n";
 	}
 	
 	protected String getType(){

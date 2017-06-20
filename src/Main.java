@@ -204,6 +204,31 @@ public class Main {
 		affiche(FigureUtils.get("Carré 21"));
 		affiche(FigureUtils.get("SEGMENT 20"));
 		affiche(FigureUtils.get("SEGMENT 21"));
+		
+		go("Test compare figure couleur Carré");
+		Carre cart1 = new Carre(a,4,Couleur.Noir);
+		Carre cart2 = new Carre(a,4,Couleur.Bleu);
+		affiche(cart1.equals(cart1));
+		affiche(cart1.equals(cart2));
+		
+		go("Test compare figure couleur Rectangle");
+		Rectangle rectt1 = new Rectangle(a,4,5,Couleur.Noir);
+		Rectangle rectt2 = new Rectangle(a,4,5,Couleur.Bleu);
+		affiche(rectt1.equals(rectt1));
+		affiche(rectt1.equals(rectt2));
+		
+		go("Test compare figure couleur Rond");
+		Rond rndt1 = new Rond(a, 5, Couleur.Rouge);
+		Rond rndt2 = new Rond(a, 5, Couleur.Vert);
+		affiche(rndt1.equals(rndt1));
+		affiche(rndt1.equals(rndt2));
+		
+		go("Test compare figure couleur Segment");
+		Segment segt1 = new Segment(a, 3, false, Couleur.Jaune);
+		Segment segt2 = new Segment(a, 5, true, Couleur.Rouge);
+		affiche(segt1.equals(segt1));
+		affiche(segt1.equals(segt2));
+		
 		go();
 		
 	}

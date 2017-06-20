@@ -16,6 +16,19 @@ public class Segment extends Figure {
 			point_fin = new Point(p.getX(),p.getY()+lng);
 		}
 		hor = hori;
+		couleur = Couleur.getCouleurDefaut();
+	}
+	
+	public Segment(Point p, int lng, boolean hori, Couleur c){
+		point_debut = p;
+		if(hori){
+			point_fin = new Point(p.getX()+lng,p.getY());
+		}
+		else{
+			point_fin = new Point(p.getX(),p.getY()+lng);
+		}
+		hor = hori;
+		couleur = c;
 	}
 	
 	@Override
@@ -31,7 +44,8 @@ public class Segment extends Figure {
 	@Override
 	public String toString() {
 		return new String("\n[Segment("+point_debut.getX()+";"+point_debut.getY()
-		+") à ("+point_fin.getX()+";"+point_fin.getY()+")]\n");	
+			+") à ("+point_fin.getX()+";"+point_fin.getY()+")"
+			+" Couleur : "+getCouleur()+"]\n");	
 	}
 	
 	public void affiche(){
@@ -49,6 +63,10 @@ public class Segment extends Figure {
 						(
 								this.point_fin.equals(s.point_fin)
 						)
+						&&
+						(
+								this.getCouleur().equals(s.getCouleur())		
+						)
 					)
 					||
 					(
@@ -58,6 +76,10 @@ public class Segment extends Figure {
 						&&
 						(
 								this.point_fin.equals(s.point_debut)
+						)
+						&&
+						(
+								this.getCouleur().equals(s.getCouleur())		
 						)
 					);
 		} else {

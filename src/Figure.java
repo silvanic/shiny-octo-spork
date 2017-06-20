@@ -5,6 +5,11 @@ public abstract class Figure  implements Comparable<Figure> {
 	
 	private static int nextID = 1;
 	private final String id = getType() + (nextID++);
+	public Couleur couleur;
+	
+	public Couleur getCouleur(){
+		return couleur;
+	}
 	
 	public String getId(){
 		return id;

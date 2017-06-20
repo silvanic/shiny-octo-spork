@@ -16,25 +16,25 @@ public class FigureUtils {
 	private static final Map<String, Figure> ids = new HashMap<String, Figure>();
 	
 	public static Rond getRandomRond(){
-		Rond rond =new Rond(getRandomPoint(), getRandomInt());
+		Rond rond =new Rond(getRandomPoint(), getRandomInt(), getRandomCouleur());
 		ids.put(rond.getId(), rond);		
 		return rond;
 	}
 	
 	public static Rectangle getRandomRectangle(){
-		Rectangle rect = new Rectangle(getRandomPoint(), getRandomInt() , getRandomInt());
+		Rectangle rect = new Rectangle(getRandomPoint(), getRandomInt() , getRandomInt(), getRandomCouleur());
 		ids.put(rect.getId(), rect);
 		return rect;
 	}
 	
 	public static Carre getRandomCarre(){
-		Carre carre = new Carre(getRandomPoint(), getRandomInt());
+		Carre carre = new Carre(getRandomPoint(), getRandomInt(), getRandomCouleur());
 		ids.put(carre.getId(), carre);
 		return carre;
 	}
 	
 	public static Segment getRandomSegment(){
-		Segment segment= new Segment(getRandomPoint(), getRandomInt(), rand.nextBoolean());
+		Segment segment= new Segment(getRandomPoint(), getRandomInt(), rand.nextBoolean(), getRandomCouleur());
 		ids.put(segment.getId(), segment);
 		return segment;
 	}	
@@ -77,6 +77,10 @@ public class FigureUtils {
 				System.out.print("Et c'est reparti!");
 				return getRandomSurfacable();
 		}
+	}
+	
+	public static Couleur getRandomCouleur(){
+		return Couleur.values()[rand.nextInt(5)];
 	}
 	
 	public static Collection<Point> getPoints(Figure... aFig){

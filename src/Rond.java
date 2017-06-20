@@ -11,20 +11,31 @@ public class Rond extends Figure implements Surfacable{
 		}
 		r = rayon;
 		centre = point;
+		couleur = Couleur.getCouleurDefaut();
+	}
+	
+	public Rond(Point point, int rayon, Couleur c){
+		if(rayon<0){
+			rayon = -rayon;
+		}
+		r = rayon;
+		centre = point;
+		couleur = c;
 	}
 	
 	public boolean equals(Object o){
 		if(o instanceof Rond){
 			Rond rond = (Rond) o;
 			return this.getCentre().equals(rond.getCentre())
-					&& (this.r == rond.r);
+					&& (this.r == rond.r)
+					&& (this.getCouleur().equals(rond.getCouleur()));
 		} else {
 			return false;
 		}
 	}
 	
 	public String toString(){
-		return "[ROND "+centre+" de rayon "+r+" avec une surface de "+ surface()+"]\n";
+		return "[ROND "+centre+" de rayon "+r+" avec une surface de "+ surface()+" Couleur : "+getCouleur()+"]\n";
 	}
 
 	@Override
