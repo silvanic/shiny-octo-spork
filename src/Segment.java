@@ -8,18 +8,20 @@ public class Segment extends Figure {
 	private boolean hor;
 	
 	public Segment(Point p, int lng, boolean hori){
-		point_debut = p;
-		if(hori){
-			point_fin = new Point(p.getX()+lng,p.getY());
-		}
-		else{
-			point_fin = new Point(p.getX(),p.getY()+lng);
-		}
-		hor = hori;
-		couleur = Couleur.getCouleurDefaut();
+//		point_debut = p;
+//		if(hori){
+//			point_fin = new Point(p.getX()+lng,p.getY());
+//		}
+//		else{
+//			point_fin = new Point(p.getX(),p.getY()+lng);
+//		}
+//		hor = hori;
+//		couleur = Couleur.getCouleurDefaut();
+		this(p, lng, hori, Couleur.getCouleurDefaut());
 	}
 	
 	public Segment(Point p, int lng, boolean hori, Couleur c){
+		super(c);
 		point_debut = p;
 		if(hori){
 			point_fin = new Point(p.getX()+lng,p.getY());
@@ -108,5 +110,9 @@ public class Segment extends Figure {
 	@Override
 	protected String getType() {
 		return "SEGMENT ";
+	}
+	
+	public Collection<Point> getPointsExtremes() {
+		return getPoints();
 	}
 }

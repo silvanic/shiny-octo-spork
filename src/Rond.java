@@ -1,20 +1,23 @@
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 public class Rond extends Figure implements Surfacable{
 	private int r;
 	private Point centre;
 	
 	public Rond(Point point, int rayon){
-		if(rayon<0){
-			rayon = -rayon;
-		}
-		r = rayon;
-		centre = point;
-		couleur = Couleur.getCouleurDefaut();
+//		if(rayon<0){
+//			rayon = -rayon;
+//		}
+//		r = rayon;
+//		centre = point;
+//		couleur = Couleur.getCouleurDefaut();
+		this(point, rayon, Couleur.getCouleurDefaut());
 	}
 	
 	public Rond(Point point, int rayon, Couleur c){
+		super(c);
 		if(rayon<0){
 			rayon = -rayon;
 		}
@@ -75,6 +78,15 @@ public class Rond extends Figure implements Surfacable{
 	@Override
 	protected String getType() {
 		return "ROND ";
+	}
+
+	public Collection<Point> getPointsExtremes() {
+		Collection<Point> collection = new HashSet<Point>();
+		collection.add(new Point(centre.getX() + r, centre.getY() + r));
+		collection.add(new Point(centre.getX() + r, centre.getY() - r));
+		collection.add(new Point(centre.getX() - r, centre.getY() + r));
+		collection.add(new Point(centre.getX() - r, centre.getY() - r));
+		return collection;
 	}
 	
 }

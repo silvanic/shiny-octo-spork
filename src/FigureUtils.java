@@ -1,50 +1,66 @@
-import java.util.ArrayList;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class FigureUtils {
+	private static final int SIZE_MIN = 1;
+	private static final int SIZE_MAX = 25;
+	
+	private static int X_MIN = -375;
+	private static int X_MAX = 375;
+	
+	private static int Y_MIN = -375;
+	private static int Y_MAX = 375;
+	
 	public static Random rand = new Random();
 	
 	private static final Map<String, Figure> ids = new HashMap<String, Figure>();
 	
 	public static Rond getRandomRond(){
-		Rond rond =new Rond(getRandomPoint(), getRandomInt(), getRandomCouleur());
+		Rond rond =new Rond(getRandomPoint(), getRandomInt(SIZE_MIN, SIZE_MAX), getRandomCouleur());
 		ids.put(rond.getId(), rond);		
 		return rond;
 	}
 	
 	public static Rectangle getRandomRectangle(){
-		Rectangle rect = new Rectangle(getRandomPoint(), getRandomInt() , getRandomInt(), getRandomCouleur());
+		Rectangle rect = new Rectangle(getRandomPoint(), getRandomInt(SIZE_MIN, SIZE_MAX) , getRandomInt(SIZE_MIN, SIZE_MAX), getRandomCouleur());
 		ids.put(rect.getId(), rect);
 		return rect;
 	}
 	
 	public static Carre getRandomCarre(){
-		Carre carre = new Carre(getRandomPoint(), getRandomInt(), getRandomCouleur());
+		Carre carre = new Carre(getRandomPoint(), getRandomInt(SIZE_MIN, SIZE_MAX), getRandomCouleur());
 		ids.put(carre.getId(), carre);
 		return carre;
 	}
 	
 	public static Segment getRandomSegment(){
-		Segment segment= new Segment(getRandomPoint(), getRandomInt(), rand.nextBoolean(), getRandomCouleur());
+		Segment segment= new Segment(getRandomPoint(), getRandomInt(SIZE_MIN, SIZE_MAX), rand.nextBoolean(), getRandomCouleur());
 		ids.put(segment.getId(), segment);
 		return segment;
 	}	
 	
 	public static Point getRandomPoint(){
-		return new Point(getRandomInt(), getRandomInt());
+		return new Point(getRandomInt(X_MIN, X_MAX), getRandomInt(Y_MIN, Y_MAX));
 	}
 	
-	public static int getRandomInt(){
-		return rand.nextInt(100);
+	public static int getRandomInt(int min, int max){		
+		return rand.nextInt(max-min)+min;
 	}
 	
 	public static Figure getRandomFigure(){
@@ -101,50 +117,20 @@ public class FigureUtils {
     	return array;
     }
     
-    public static Figure getFigureEn(Point p, Dessin dessin){
-    	Iterator<Figure> iter = dessin.getFigures().iterator();
-    	while(iter.hasNext()){
-    		Figure figure = iter.next();
-    		if(figure!=null){
-        		if(figure.couvre(p)){
-        			return figure;
-        		}       			
-    		} 		
-    	}
-    	return null;
+    public static Optional<Figure> getFigureEn(Point p, Dessin dessin){
+    	return dessin.getFigures().stream()
+    			.filter(f -> f.couvre(p))
+    			.findFirst();
     }
     
     public static Collection<Figure> trieProcheOrigine(Dessin dessin){
-//    	List<Figure> list = new ArrayList<>(dessin.figures);
-//    	Collections.sort(list);
-//    	return list;
     	return dessin.getFigures().stream()
         		.sorted()
         		.collect(Collectors.toList());
         	
     }
 
-    public static List<Surfacable> trieDominant(Dessin dessin){
-//    	List<Figure> list = new ArrayList<>();
-//    	for (Figure figure : dessin.figures) {
-//			if(figure instanceof Surfacable){
-//				list.add(figure);
-//			}
-//		}
-//    	
-//    	Collections.sort(list, new Comparator<Figure>() {
-//			public int compare(Figure surf1, Figure surf2) {
-//			
-//				double x1 = ((Surfacable) surf1).surface();
-//				
-//				double x2 = ((Surfacable) surf2).surface();
-//				
-//				return (int) (x2 - x1);
-//			
-//				}
-//			}
-//    	);
-//    	return list;    	
+    public static List<Surfacable> trieDominant(Dessin dessin){	
     	return dessin.getFigures().stream()
     			.filter(f -> f instanceof Surfacable)
     			.map(x -> (Surfacable) x)
@@ -170,4 +156,69 @@ public class FigureUtils {
 			System.out.println(figure.getId()+"\n");
 		}
     }
+    
+    public static void imprime(Dessin dessin) throws IOException, ImpressionHorsLimiteException{
+		
+		Predicate<Point> xTropPetit = p -> p.getX() < X_MIN;
+		Predicate<Point> yTropPetit = p -> p.getY() < Y_MIN;
+		Predicate<Point> xTropGrand = p -> p.getX() > X_MAX;
+		Predicate<Point> yTropGrand = p -> p.getY() > Y_MAX;
+		
+		Optional<Point> mauvais = dessin.getPointsExtremes()
+									.stream()
+									.filter(xTropPetit
+											.or(yTropPetit)
+											.or(xTropGrand)
+											.or(yTropGrand))
+									.findAny();
+		
+		if(mauvais.isPresent()){
+			//throw new ImpressionHorsLimiteException();
+		}
+		
+    	File file = File.createTempFile("monDessin", ".txt");
+		PrintWriter sortie = new PrintWriter(new FileOutputStream(file));
+		dessin.getFigures().stream()
+			.forEach(f->sortie.println(f));
+		for (int i = 0; i < 100; i++) {
+			sortie.print("=");
+		}
+		sortie.println();
+		for (int i = X_MIN; i < X_MAX; i++) {
+			for (int j = Y_MIN; j < Y_MAX; j++) {
+				Optional<Figure> figure = getFigureEn(new Point(i, j), dessin);				
+				if(figure.isPresent()){
+					sortie.print(figure.get().getCouleur().abreviation());
+				}
+				else{
+					sortie.print(" ");
+				}
+			}
+			sortie.println();
+		}
+		System.out.println("Impression sous " + file.getAbsolutePath());
+		sortie.close();
+		Desktop.getDesktop().browse(file.toURI());
+    }
+    
+    public static void sauvegarde(Dessin d) throws IOException {
+		File file = File.createTempFile("monDessin", ".save");
+		ObjectOutputStream sortie = new ObjectOutputStream(new FileOutputStream(file));
+		sortie.writeObject(d);
+		System.out.println("Sauvegarde sous " + file.getAbsolutePath());
+		sortie.close();
+	}
+	
+	public static Dessin charge(String filename) throws IOException, ClassNotFoundException {
+		Dessin dessin;
+		try {
+			ObjectInputStream sortie = new ObjectInputStream(new FileInputStream(filename));
+			dessin = (Dessin) sortie.readObject();
+			sortie.close();
+		} catch (FileNotFoundException e) {
+			System.out.println("Fichier non trouvé : " + e.getMessage());
+			dessin = new Dessin();
+		}
+		return dessin;
+	}
 }

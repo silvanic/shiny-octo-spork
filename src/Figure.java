@@ -1,11 +1,18 @@
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Optional; 
 
-public abstract class Figure  implements Comparable<Figure> {
+public abstract class Figure  implements Comparable<Figure>, Serializable {
 	
 	private static int nextID = 1;
 	private final String id = getType() + (nextID++);
 	public Couleur couleur;
+	
+	protected Figure(Couleur c){
+		couleur=c;
+	}
+	
+	public abstract Collection<Point> getPointsExtremes();
 	
 	public Couleur getCouleur(){
 		return couleur;

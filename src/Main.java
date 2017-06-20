@@ -1,15 +1,14 @@
+import java.io.IOException;
 import java.util.HashSet;
-
-import javax.swing.JOptionPane;
 
 public class Main {
 	static boolean start;
 	static long time;
 	
-	public static void main(String[] args){
+	public static void main(String[] args) throws IOException, ImpressionHorsLimiteException{
 		go();
 		go("Créer des points");
-		Point a = new Point(0,0);
+		Point a = new Point(10,10);
 		Point b = new Point(3,0);
 		Point c = new Point(1,1);
 		
@@ -19,21 +18,21 @@ public class Main {
 		
 		//Initialise un rond
 		go("Initialise un rond");
-		Rond rond = new Rond(a,3);
+		Rond rond = new Rond(a,3,Couleur.Bleu);
 		Rond rond2 = new Rond(a,3);
 		Rond rond3 = new Rond(a,4);
 		rond.affiche();		
 		
 		//Construis un rectangle
 		go("Construis un rectangle");
-		Rectangle rect = new Rectangle(a, 4, 2);
+		Rectangle rect = new Rectangle(a, 4, 2,Couleur.Rouge);
 		Rectangle rect2 = new Rectangle(a, 4, 2);
 		Rectangle rect3 = new Rectangle(a, 10, 7);
 		rect.affiche();
 		
 		//Construis un carré
 		go("Construis un carré");
-		Carre carre = new Carre(a, 6);
+		Carre carre = new Carre(a, 6,Couleur.Jaune);
 		Carre carre2 = new Carre(a, 6);
 		Carre carre3 = new Carre(a, 7);
 		carre.affiche();		
@@ -128,11 +127,7 @@ public class Main {
 		int nb =10;
 		int index = 0;
 		Dessin array = new Dessin();
-		array.figures = (HashSet<Figure>) FigureUtils.genere(nb);
-//		for (Figure figure : array.getFigures()) {
-//			System.out.println("\nFIGURE "+index);
-//			figure.affiche();
-//			index++;			
+		array.figures = (HashSet<Figure>) FigureUtils.genere(nb);	
 //		}				
 		System.out.println("Nb de figure dessiné(s) : "+array.size()+"/"+nb+" donc " + (nb-array.size()) +" doublon(s)");
 		
@@ -228,6 +223,12 @@ public class Main {
 		Segment segt2 = new Segment(a, 5, true, Couleur.Rouge);
 		affiche(segt1.equals(segt1));
 		affiche(segt1.equals(segt2));
+		
+		
+		go("Sauvegarde fichier");
+		Dessin dessinImprime = new Dessin();
+		dessinImprime.figures = (HashSet<Figure>) FigureUtils.genere(1000);
+		FigureUtils.imprime(dessinImprime);
 		
 		go();
 		

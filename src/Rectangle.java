@@ -19,19 +19,19 @@ public class Rectangle extends Figure implements Surfacable {
 	}
 	
 	public Rectangle(Point point, int haut, int larg){
-		pHG = point;
-		pBG = new Point(pHG.getX(),pHG.getY()-haut);
-		pHD = new Point(pHG.getX()+larg,pHG.getY());
-		pBD = new Point(pHD.getX(),pBG.getY());
-		couleur = Couleur.getCouleurDefaut();
+//		pHG = point;
+//		pBG = new Point(pHG.getX(),pHG.getY()-haut);
+//		pHD = new Point(pHG.getX()+larg,pHG.getY());
+//		pBD = new Point(pHD.getX(),pBG.getY());
+		this(point, haut, larg, Couleur.getCouleurDefaut());
 	}
 	
 	public Rectangle(Point point, int haut, int larg, Couleur c){
+		super(c);
 		pHG = point;
 		pBG = new Point(pHG.getX(),pHG.getY()-haut);
 		pHD = new Point(pHG.getX()+larg,pHG.getY());
 		pBD = new Point(pHD.getX(),pBG.getY());
-		couleur = c;
 	}
 
 	public Point getPointHautGauche(){		
@@ -94,5 +94,8 @@ public class Rectangle extends Figure implements Surfacable {
 		}
 		return false;
 	}
-
+	
+	public Collection<Point> getPointsExtremes() {
+		return getPoints();
+	}
 }
